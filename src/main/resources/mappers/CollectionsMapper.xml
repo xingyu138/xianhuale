@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.CollectionsMapper">
+
+	<select id="getCollections" resultType="Collections">
+		select
+		c.id,
+		c.productName,
+		u.nickName,
+		c.commentsContent,
+		c.commentsDate
+		from mall_comments c
+		LEFT
+		JOIN mall_user u
+		on c.userId=u.userId
+	</select>
+
+
+
+
+	<!-- 查询（根据评论Id） -->
+	<select id="getCollectionsById" resultType="Collections">
+		select
+		c.id,
+		c.productName,
+		u.nickName,
+		c.commentsContent,
+		c.commentsDate
+		from mall_comments c
+		LEFT
+		JOIN mall_user u
+		on c.userId=u.userId
+		where c.id =#{id}
+	</select>
+
+
+	<!-- 删除留言 -->
+	<delete id="deleteCollection">
+		delete from mall_comments where id=#{id}
+	</delete>
+
+	<!-- 增加 -->
+	<insert id="addCollection" parameterType="Collections">
+		insert into mall_comments
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId !=null and userId !=''">
+				userId,
+			</if>
+			<if test="productName !=null and productName !=''">
+				productName,
+			</if>
+			<if test="commentsDate !=null and commentsDate !=''">
+				commentsDate,
+			</if>
+			<if test="commentsContent !=null and commentsContent !=''">
+				commentsContent,
+			</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="userId !=null and userId !=''">
+				#{userId},
+			</if>
+			<if test="productName !=null and productName !=''">
+				#{productName},
+			</if>
+			<if test="commentsDate !=null and commentsDate !=''">
+				NOW(),
+			</if>
+			<if test="commentsContent !=null and commentsContent !=''">
+				#{commentsContent},
+			</if>
+		</trim>
+	</insert>
+
+
+
+	<!-- 修改 -->
+	<update id="updateCollection" parameterType="Collections">
+		update mall_comments
+		<set>
+			<if test="userId !=null and userId !=''">
+				userId=#{userId},
+			</if>
+			<if test="productName !=null and productName !=''">
+				productName=#{productName},
+			</if>
+			commentsDate = NOW(),
+
+			<if test="commentsContent !=null and commentsContent !=''">
+				commentsContent=#{commentsContent},
+			</if>
+		</set>
+		where id =#{id}
+	</update>
+
+
+
+	<!-- 订单信息-分页 -->
+	<select id="getCollectionsListPage" resultType="Collections">
+		select
+		c.id,
+		c.userId,
+		c.productName,
+		u.nickName,
+		c.commentsContent,
+		c.commentsDate
+		from mall_comments c
+		LEFT JOIN mall_user u
+		on
+		c.userId=u.userId
+		<where>
+			<if test="productName !=null and productName !=''">
+				and c.productName like "%"#{productName}"%"
+			</if>
+		</where>
+		order by c.commentsDate DESC
+		limit #{start},#{pageSize}
+
+	</select>
+
+	<!-- 数量 -->
+	<select id="getCollectionsListPageCount" resultType="Integer">
+		select count(id) from mall_comments
+		<where>
+			<if test="productName !=null and productName !=''">
+				and productName like concat("%",#{productName},"%")
+			</if>
+		</where>
+	</select>
+
+
+
+
+
+
+
+
+	<update id="updateByPrimaryKey" parameterType="Collections">
+		update
+		mall_comments
+		set userId = #{userid,jdbcType=INTEGER},
+		productId =
+		#{productid,jdbcType=INTEGER}
+		where id = #{id,jdbcType=INTEGER}
+	</update>
+</mapper>

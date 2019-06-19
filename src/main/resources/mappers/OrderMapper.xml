@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.OrderMapper">
+	<resultMap id="orderList" type="Order">
+		<result property="id" column="id"/>
+		 <result property="orderNo" column="order_no"/>
+		<result property="userId" column="user_id"/>
+		<result property="shippingId" column="shipping_id"/>
+		<result property="payment" column="payment"/>
+		<result property="paymentType" column="payment_type"/>
+		<result property="postage" column="postage"/>
+		<result property="status" column="status"/>
+		<result property="paymentTime" column="payment_time"/>
+		<result property="sendTime" column="send_time"/>
+		<result property="endTime" column="end_time"/>
+		<result property="closeTime" column="close_time"/>
+		<result property="createTime" column="create_time"/>
+		<result property="updateTime" column="update_time"/>
+		<result property="address" column="address"/>
+		<result property="phone" column="phone"/>
+		<result property="username" column="username"/>
+		<result property="wxnum" column="wxnum"/>
+
+
+	</resultMap>
+	<!--按条件查询订单数量 -->
+	<select id="selectOrderCount" parameterType="order" resultType="Integer">
+		SELECT COUNT(id) FROM mall_order
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="username!=null and username!=''">
+				and username like CONCAT('%',#{username},'%')
+			</if>
+			<if test="order_no!=null and order_no!=''">
+				and order_no like CONCAT('%',#{order_no},'%')
+			</if>
+			<if test="create_time!=null and create_time!=''">
+				and create_time like CONCAT('%',#{create_time},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status=#{status}
+			</if>
+		</trim>
+	</select>
+	<!--按条件查看订单列表信息 -->
+	<select id="selectOrderListPage" parameterType="order"
+			resultMap="orderList">
+		SELECT mo.*,ms.`receiver_city`,ms.`receiver_province`,ms.`receiver_address`,ms.`receiver_district`,mopt.`payment_desc`,mos.`status_des`
+		FROM mall_order mo
+		LEFT JOIN mall_ship ms ON mo.`user_id`=ms.`user_id`
+		LEFT JOIN mall_orderpayment_type mopt ON mo.`payment_type`=mopt.`id`
+		LEFT JOIN mall_orderstauts mos ON mo.`status`=mos.`id`
+		<trim prefix="where" prefixOverrides="and | or">
+			<if test="username!=null and username!=''">
+				and username like CONCAT('%',#{username},'%')
+			</if>
+			<if test="order_no!=null and order_no!=''">
+				and order_no like CONCAT('%',#{order_no},'%')
+			</if>
+			<if test="create_time!=null and create_time!=''">
+				and create_time like CONCAT('%',#{create_time},'%')
+			</if>
+			<if test="status!=null and status!=''">
+				and status=#{status}
+			</if>
+		</trim>
+		ORDER BY mo.`id` DESC
+		<trim prefix="limit" suffixOverrides=",">
+			<if test="start!=null and strat!='' and pageSize!=null and pageSize!=''">
+				#{start},#{pageSize}
+			</if>
+		</trim>
+	</select>
+
+	<!--增加订单-->
+	<insert id="insertOrder" parameterType="order">
+		insert into mall_order
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="order_no!=null and order_no!=''">order_no,</if>
+			<if test="user_id!=null and user_id!=''">user_id,</if>
+			<if test="shipping_id!=null and shipping_id!=''">shipping_id,</if>
+			<if test="payment!=null and payment!=''">payment,</if>
+			<if test="payment_type!=null and payment_type!=''">payment_type,</if>
+			<if test="postage!=null and postage!=''">postage,</if>
+			<if test="status!=null and status!=''">status,</if>
+			<if test="payment_time!=null and payment_time!=''">payment_time,</if>
+			<if test="send_time!=null and send_time!=''">send_time,</if>
+			<if test="end_time!=null and end_time!=''">end_time,</if>
+			<if test="close_time!=null and close_time!=''">close_time,</if>
+			<if test="create_time!=null and create_time!=''">create_time,</if>
+			<if test="update_time!=null and update_time!=''">update_time,</if>
+			<if test="address!=null and address!=''">address,</if>
+			<if test="phone!=null and phone!=''">phone,</if>
+			<if test="username!=null and username!=''">username,</if>
+			<if test="wxnum!=null and wxnum!=''">wxnum,</if>
+			<if test="message!=null and message!=''">message,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="order_no!=null and order_no!=''">#{order_no},</if>
+			<if test="user_id!=null and user_id!=''">#{user_id},</if>
+			<if test="shipping_id!=null and shipping_id!=''">#{shipping_id},</if>
+			<if test="payment!=null and payment!=''">#{payment},</if>
+			<if test="payment_type!=null and payment_type!=''">#{payment_type},</if>
+			<if test="postage!=null and postage!=''">#{postage},</if>
+			<if test="status!=null and status!=''">#{status},</if>
+			<if test="payment_time!=null and payment_time!=''">#{payment_time},</if>
+			<if test="send_time!=null and send_time!=''">#{send_time},</if>
+			<if test="end_time!=null and end_time!=''">#{end_time},</if>
+			<if test="close_time!=null and close_time!=''">#{close_time},</if>
+			<if test="create_time!=null and create_time!=''">#{create_time},</if>
+			<if test="update_time!=null and update_time!=''">#{update_time},</if>
+			<if test="address!=null and address!=''">#{address},</if>
+			<if test="phone!=null and phone!=''">#{phone},</if>
+			<if test="username!=null and username!=''">#{username},</if>
+			<if test="wxnum!=null and wxnum!=''">#{wxnum},</if>
+			<if test="message!=null and message!=''">#{message},</if>
+		</trim>
+	</insert>
+
+	<!--修改订单-->
+	<update id="updateOrder" parameterType="order">
+		update mall_order
+		<trim prefix="set" suffixOverrides="," suffix="where order_no=#{order_no}">
+			<if test="user_id!=null and user_id!=''">user_id=#{user_id},</if>
+			<if test="shipping_id!=null and shipping_id!=''">shipping_id=#{shipping_id},</if>
+			<if test="payment!=null and payment!=''">payment=#{payment},</if>
+			<if test="payment_type!=null and payment_type!=''">payment_type=#{payment_type},</if>
+			<if test="postage!=null and postage!=''">postage=#{postage},</if>
+			<if test="status!=null and status!=''">status=#{status},</if>
+			<if test="payment_time!=null and payment_time!=''">payment_time=#{payment_time},</if>
+			<if test="send_time!=null and send_time!=''">send_time=#{send_time},</if>
+			<if test="end_time!=null and end_time!=''">end_time=#{end_time},</if>
+			<if test="close_time!=null and close_time!=''">close_time=#{close_time},</if>
+			<if test="create_time!=null and create_time!=''">create_time=#{create_time},</if>
+			<if test="update_time!=null and update_time!=''">update_time=#{update_time},</if>
+			<if test="address!=null and address!=''">address=#{address},</if>
+			<if test="phone!=null and phone!=''">phone=#{phone},</if>
+			<if test="username!=null and username!=''">username=#{username},</if>
+			<if test="wxnum!=null and wxnum!=''">wxnum=#{wxnum},</if>
+			<if test="message!=null and message!=''">message=#{message},</if>
+		</trim>
+	</update>
+	<!--删除查询订单信息-->
+	<delete id="deleteOrder" parameterType="Order">
+		delete from mall_order
+		<trim prefix="where" prefixOverrides="and | or" suffixOverrides=",">
+			<if test="id!=null and id!=''">and id=#{id},</if>
+			<if test="order_no and order_no!=''">and order_no=#{order_no},</if>
+		</trim>
+	</delete>
+	<!--按条件查询订单信息-->
+	<select id="selectOrderInfo" parameterType="Order" resultMap="orderList">
+		SELECT * FROM mall_order WHERE order_no=#{order_no}
+	</select>
+</mapper>

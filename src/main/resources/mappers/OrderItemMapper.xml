@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.OrderItemMapper">
+    <resultMap id="OrderItemList" type="OrderItem">
+        <result property="productName" column="productName"/>
+        <result property="productImage" column="productPic"/>
+        <result property="orderNo" column="order_no"/>
+        <result property="productId" column="product_id"/>
+        <result property="currentUnitPrice" column="price"/>
+        <result property="quantity" column="quantity"/>
+        <result property="totalPrice" column="total_price"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="address" column="address"/>
+        <result property="userId" column="user_id"/>
+    </resultMap>
+    <!--查看订单商品列表信息-->
+    <select id="selectOrderItemList" parameterType="OrderItem" resultMap="OrderItemList">
+      SELECT moi.*,mp.`productName`,mp.`productPic`,mp.`price`
+      FROM mall_order_item moi
+      LEFT JOIN mall_product mp ON moi.`product_id`=mp.`id`
+        <trim prefix="where" prefixOverrides="and | or">
+            <if test="user_id!=null and user_id!=''">
+                user_id=#{user_id}
+            </if>
+            <if test="order_no!=null and order_no!=''">
+                order_no=#{order_no}
+            </if>
+        </trim>
+  </select>
+
+    <!--添加订单商品信息-->
+    <insert id="insertOrderItem" parameterType="OrderItem">
+        insert into mall_order_item
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="user_id!=null and user_id!=''">user_id,</if>
+            <if test="order_no!=null and order_no!=''">order_no,</if>
+            <if test="product_id!=null and product_id!=''">product_id,</if>
+            <if test="product_name!=null and product_name!=''">product_name,</if>
+            <if test="product_image!=null and product_image!=''">product_image,</if>
+            <if test="current_unit_price!=null and current_unit_price!=''">current_unit_price,</if>
+            <if test="quantity!=null and quantity!=''">quantity,</if>
+            <if test="total_price!=null and total_price!=''">total_price,</if>
+            <if test="create_time!=null and create_time!=''">create_time,</if>
+            <if test="update_time!=null and update_time!=''">update_time,</if>
+            <if test="address!=null and address!=''">address,</if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="user_id!=null and user_id!=''">#{user_id},</if>
+            <if test="order_no!=null and order_no!=''">#{order_no},</if>
+            <if test="product_id!=null and product_id!=''">#{product_id},</if>
+            <if test="product_name!=null and product_name!=''">#{product_name},</if>
+            <if test="product_image!=null and product_image!=''">#{product_image},</if>
+            <if test="current_unit_price!=null and current_unit_price!=''">#{current_unit_price},</if>
+            <if test="quantity!=null and quantity!=''">#{quantity},</if>
+            <if test="total_price!=null and total_price!=''">#{total_price},</if>
+            <if test="create_time!=null and create_time!=''">#{create_time},</if>
+            <if test="update_time!=null and update_time!=''">#{update_time},</if>
+            <if test="address!=null and address!=''">#{address},</if>
+        </trim>
+    </insert>
+
+    <!--修改订单商品信息-->
+    <update id="updateOrderItem" parameterType="OrderItem">
+        update mall_order_item
+        <trim prefix="set" suffixOverrides="," suffix="where id=#{id}">
+            <if test="user_id!=null and user_id!=''">user_id=#{user_id},</if>
+            <if test="order_no!=null and order_no!=''">order_no=#{order_no},</if>
+            <if test="product_id!=null and product_id!=''">product_id=#{product_id},</if>
+            <if test="product_name!=null and product_name!=''">product_name=#{product_name},</if>
+            <if test="product_image!=null and product_image!=''">product_image=#{product_image},</if>
+            <if test="current_unit_price!=null and current_unit_price!=''">current_unit_price=#{current_unit_price},</if>
+            <if test="quantity!=null and quantity!=''">quantity=#{quantity},</if>
+            <if test="total_price!=null and total_price!=''">total_price=#{total_price},</if>
+            <if test="create_time!=null and create_time!=''">create_time=#{create_time},</if>
+            <if test="update_time!=null and update_time!=''">update_time=#{update_time},</if>
+            <if test="address!=null and address!=''">address=#{address},</if>
+        </trim>
+    </update>
+    <!--删除订单商品信息-->
+    <delete id="deleteOrderItem" parameterType="OrderItem">
+        delete from mall_order_item where order_no=#{order_no}
+    </delete>
+</mapper>

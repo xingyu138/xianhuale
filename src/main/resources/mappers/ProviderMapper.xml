@@ -1,0 +1,293 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.ProviderMapper" >
+
+
+  <sql id="Base_Column_List" >
+    id, proCode, proName, proDesc, proContact, proPhone, proAddress, proFax, createdBy, 
+    creationDate, modifyDate, modifyBy
+  </sql>
+  <select id="getProviderById" resultType="provider" parameterType="Integer" >
+    select
+      id, proCode, proName, proDesc, proContact, proPhone, proAddress, proFax, createdBy,
+      creationDate, modifyDate, modifyBy
+    <!--<include refid="Base_Column_List" />-->
+    from mall_provider
+    where id = #{id}
+  </select>
+  <!-- 供应商分页  -->
+  <select id="getProviderListPageCount" resultType="Integer">
+  select COUNT(1) from mall_provider
+  <where>
+    	<if test="proName !=null and proName !=''">
+    		and proName like "%"#{proName}"%"
+    	</if>
+    	<if test="proId !=null and proId !=''">
+    		and id = #{proId}
+    	</if>
+    	<if test="proPhone !=null and proPhone !=''">
+    		and proPhone like "%"#{proPhone}"%"
+    	</if>
+    </where>
+  </select>
+  
+  
+  
+  <select id="getProviderListPage" resultType="provider">
+    select
+	    id,
+	    proCode,
+	    proName,
+	    proContact,
+	    proPhone,
+	    creationDate
+	    from mall_provider
+    <where>
+    	<if test="proName !=null and proName !=''">
+    		and proName like "%"#{proName}"%"
+    	</if>
+    	<if test="proId !=null and proId !=''">
+    		and id = #{proId}
+    	</if>
+    	<if test="proPhone !=null and proPhone !=''">
+    		and proPhone like concat('%',#{proPhone},'%')
+    	</if>
+    </where>
+    order by id 
+    limit #{start},#{pageSize}
+  </select>
+  
+  
+  
+  <delete id="deleteProvider" parameterType="Integer" >
+    delete from mall_provider
+    where id = #{id}
+  </delete>
+  <insert id="addProvider" parameterType="Provider" >
+
+    insert into mall_provider (
+
+      <trim suffixOverrides=",">
+          <if test="proCode!=null and proCode!=''">
+              proCode,
+          </if>
+          <if test="proName!=null and proName!=''">
+              proName,
+          </if>
+          <if test="proDesc!=null and proDesc!=''">
+              proDesc,
+          </if>
+          <if test="proContact!=null and proContact!=''">
+              proContact,
+          </if>
+          <if test="proPhone!=null and proPhone!=''">
+              proPhone,
+          </if>
+          <if test="proAddress!=null and proAddress!=''">
+              proAddress,
+          </if>
+          <if test="proFax!=null and proFax!=''">
+              proFax,
+          </if>
+          <if test="createdBy!=null and createdBy!=''">
+              createdBy,
+          </if>
+
+              creationDate,
+
+          <if test="modifyBy!=null and modifyBy!=''">
+              modifyBy,
+          </if>
+      </trim>
+      )
+    values (
+      <trim suffixOverrides=",">
+          <if test="proCode!=null and proCode!=''">
+              #{proCode},
+          </if>
+          <if test="proName!=null and proName!=''">
+              #{proName},
+          </if>
+          <if test="proDesc!=null and proDesc!=''">
+              #{proDesc},
+          </if>
+          <if test="proContact!=null and proContact!=''">
+              #{proContact},
+          </if>
+          <if test="proPhone!=null and proPhone!=''">
+              #{proPhone},
+          </if>
+          <if test="proAddress!=null and proAddress!=''">
+              #{proAddress},
+          </if>
+          <if test="proFax!=null and proFax!=''">
+              #{proFax},
+          </if>
+          <if test="createdBy!=null and createdBy!=''">
+              #{createdBy},
+          </if>
+
+              NOW(),
+
+          <if test="modifyBy!=null and modifyBy!=''">
+              #{modifyBy},
+          </if>
+      </trim>
+      )
+  </insert>
+  
+  <update id="updateProvider" parameterType="Provider" >
+    update mall_provider
+    <set>
+        <if test="proCode!=null and proCode!=''">
+            proCode=#{proCode},
+        </if>
+        <if test="proName!=null and proName!=''">
+            proName=#{proName},
+        </if>
+        <if test="proDesc!=null and proDesc!=''">
+            proDesc=#{proDesc},
+        </if>
+        <if test="proContact!=null and proContact!=''">
+            proContact=#{proContact},
+        </if>
+        <if test="proPhone!=null and proPhone!=''">
+            proPhone=#{proPhone},
+        </if>
+        <if test="proAddress!=null and proAddress!=''">
+            proAddress=#{proAddress},
+        </if>
+        <if test="proFax!=null and proFax!=''">
+            proFax=#{proFax},
+        </if>
+       
+            modifyDate=NOW(),
+        
+        
+        <if test="modifyBy!=null and modifyBy!=''">
+            modifyBy=#{modifyBy},
+        </if>
+  </set>
+      where id =#{id}
+  </update>
+  <!-- <insert id="insertSelective" parameterType="Provider" >
+    insert into mall_provider
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="procode != null" >
+        proCode,
+      </if>
+      <if test="proname != null" >
+        proName,
+      </if>
+      <if test="prodesc != null" >
+        proDesc,
+      </if>
+      <if test="procontact != null" >
+        proContact,
+      </if>
+      <if test="prophone != null" >
+        proPhone,
+      </if>
+      <if test="proaddress != null" >
+        proAddress,
+      </if>
+      <if test="profax != null" >
+        proFax,
+      </if>
+      <if test="createdby != null" >
+        createdBy,
+      </if>
+      <if test="creationdate != null" >
+        creationDate,
+      </if>
+      <if test="modifydate != null" >
+        modifyDate,
+      </if>
+      <if test="modifyby != null" >
+        modifyBy,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=BIGINT},
+      </if>
+      <if test="procode != null" >
+        #{procode,jdbcType=VARCHAR},
+      </if>
+      <if test="proname != null" >
+        #{proname,jdbcType=VARCHAR},
+      </if>
+      <if test="prodesc != null" >
+        #{prodesc,jdbcType=VARCHAR},
+      </if>
+      <if test="procontact != null" >
+        #{procontact,jdbcType=VARCHAR},
+      </if>
+      <if test="prophone != null" >
+        #{prophone,jdbcType=VARCHAR},
+      </if>
+      <if test="proaddress != null" >
+        #{proaddress,jdbcType=VARCHAR},
+      </if>
+      <if test="profax != null" >
+        #{profax,jdbcType=VARCHAR},
+      </if>
+      <if test="createdby != null" >
+        #{createdby,jdbcType=BIGINT},
+      </if>
+      <if test="creationdate != null" >
+        #{creationdate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydate != null" >
+        #{modifydate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyby != null" >
+        #{modifyby,jdbcType=BIGINT},
+      </if>
+    </trim>
+  </insert> -->
+  
+  <!-- <update id="updateProvider" parameterType="Provider" >
+    update mall_provider
+    <set >
+      <if test="procode != null" >
+        proCode = #{proCode,jdbcType=VARCHAR},
+      </if>
+      <if test="proname != null" >
+        proName = #{proName,jdbcType=VARCHAR},
+      </if>
+      <if test="prodesc != null" >
+        proDesc = #{proDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="procontact != null" >
+        proContact = #{proContact,jdbcType=VARCHAR},
+      </if>
+      <if test="prophone != null" >
+        proPhone = #{proPhone,jdbcType=VARCHAR},
+      </if>
+      <if test="proaddress != null" >
+        proAddress = #{proAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="profax != null" >
+        proFax = #{proFax,jdbcType=VARCHAR},
+      </if>
+      <if test="createdby != null" >
+        createdBy = #{createdBy,jdbcType=BIGINT},
+      </if>
+      <if test="creationdate != null" >
+        creationDate = #{creationDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifydate != null" >
+        modifyDate = #{modifyDate,jdbcType=TIMESTAMP},
+      </if>
+      <if test="modifyby != null" >
+        modifyBy = #{modifyBy,jdbcType=BIGINT},
+      </if>
+    </set>
+    where id = #{id,jdbcType=BIGINT}
+  </update> -->
+  
+</mapper>

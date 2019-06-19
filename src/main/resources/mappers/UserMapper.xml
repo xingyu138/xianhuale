@@ -1,0 +1,368 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.UserMapper">
+    <resultMap id="BaseResultMap" type="cn.springbootxianhualemaster.pojo.User">
+        <constructor>
+            <idArg column="userId" javaType="java.lang.Integer"/>
+            <arg column="userCode" javaType="java.lang.String"/>
+            <arg column="userName" javaType="java.lang.String"/>
+            <arg column="nickName" javaType="java.lang.String"/>
+            <arg column="password" javaType="java.lang.String"/>
+            <arg column="head_Pic" javaType="java.lang.String"/>
+            <arg column="birthday" javaType="java.util.Date"/>
+            <arg column="age" javaType="java.lang.Integer"/>
+            <arg column="address" javaType="java.lang.String"/>
+            <arg column="phone" javaType="java.lang.String"/>
+            <arg column="gender" javaType="java.lang.String"/>
+            <arg column="qq" javaType="java.lang.Integer"/>
+            <arg column="email" javaType="java.lang.String"/>
+            <arg column="paymentPassword" javaType="java.lang.String"/>
+            <arg column="orderId" javaType="java.lang.Integer"/>
+            <arg column="creationgDate" javaType="java.util.Date"/>
+            <arg column="modifyDate" javaType="java.util.Date"/>
+            <arg column="question" javaType="java.lang.String"/>
+            <arg column="answer" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+
+    <select id="getUserNum" resultType="int">
+
+        select count(userId) from mall_user
+
+        <where>
+
+            <if test="userId">
+
+                userId = #{userId}
+            </if>
+
+            <if test="userCode !=null and userCode !=''">
+
+                userCode = #{userCode}
+            </if>
+
+            <if test="userName !=null and userName !=''">
+
+                userName = #{userName}
+            </if>
+
+        </where>
+
+    </select>
+    <sql id="Base_Column_List">
+    userId, userCode, userName, nickName, password, head_Pic, birthday, age, address, 
+    phone, gender, qq, email, paymentPassword, orderId, creationgDate, modifyDate, question, 
+    answer
+  </sql>
+    <select id="selectByField" resultType="cn.springbootxianhualemaster.pojo.User">
+        select
+        <include refid="Base_Column_List"/>
+        from mall_user
+        <where>
+            <if test="userId !=null and userId!=''">
+
+                userId = #{userId}
+
+            </if>
+
+            <if test="userCode !=null and userCode !=''">
+
+                and userCode=#{userCode}
+
+            </if>
+
+            <if test="userName !=null and userName !=''">
+
+                and userName like "%"#{userName}"%"
+
+            </if>
+
+        </where>
+
+        limit #{start},#{pageSize}
+
+    </select>
+
+    <!--get userCode and password-->
+    <select id="userLogin" resultType="cn.springbootxianhualemaster.pojo.User">
+
+        select
+
+        <include refid="Base_Column_List"/>
+
+         from mall_user
+
+         where userCode=#{userCode} and password=#{password}
+
+    </select>
+
+
+    <!--添加用户-->
+    <insert id="insertData" parameterType="cn.springbootxianhualemaster.pojo.User">
+        insert into mall_user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="userCode != null and userCode !=''">
+                userCode,
+            </if>
+            <if test="userName != null and userName !=''">
+                userName,
+            </if>
+            <if test="nickName != null and nickName != ''">
+                nickName,
+            </if>
+            <if test="password != null and password !=''">
+                password,
+            </if>
+            <if test="headPic != null and headPic !=''">
+                head_Pic,
+            </if>
+            <if test="birthday != null and birthday !=''">
+                birthday,
+            </if>
+            <if test="age != null and age !=''">
+                age,
+            </if>
+            <if test="address != null and address !=''">
+                address,
+            </if>
+            <if test="phone != null and phone !=''">
+                phone,
+            </if>
+            <if test="gender != null and gender !=''">
+                gender,
+            </if>
+            <if test="qq != null and qq !=''">
+                qq,
+            </if>
+            <if test="email != null and email !=''">
+                email,
+            </if>
+            <if test="paymentPassword != null and paymentPassword !=''">
+                paymentPassword,
+            </if>
+            <if test="orderId != null and orderId !=''">
+                orderId,
+            </if>
+            <if test="creationgDate != null and creationgDate !=''">
+                creationgDate,
+            </if>
+            <if test="modifyDate != null and modifyDate !=''">
+                modifyDate,
+            </if>
+            <if test="question != null and question!=''">
+                question,
+            </if>
+            <if test="answer != null and answer !=''">
+                answer,
+            </if>
+        </trim>
+
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="userCode != null">
+                #{userCode},
+            </if>
+
+            <if test="userName != null">
+                #{userName},
+            </if>
+
+            <if test="nickName != null">
+                #{nickName},
+            </if>
+
+            <if test="password != null">
+                #{password},
+            </if>
+
+            <if test="headPic != null">
+                #{headPic},
+            </if>
+
+            <if test="birthday != null">
+                #{birthday},
+            </if>
+
+            <if test="age != null">
+                #{age},
+            </if>
+
+            <if test="address != null">
+                #{address},
+            </if>
+
+            <if test="phone != null">
+                #{phone},
+            </if>
+
+            <if test="gender != null">
+                #{gender},
+            </if>
+
+            <if test="qq != null">
+                #{qq},
+            </if>
+
+            <if test="email != null">
+                #{email},
+            </if>
+
+            <if test="paymentPassword != null">
+                #{paymentPassword},
+            </if>
+
+            <if test="orderId != null">
+                #{orderId},
+            </if>
+
+            <if test="creationgDate != null and creationgDate != ''">
+                #{creationgDate},
+            </if>
+
+            <if test="modifyDate != null">
+                #{modifydate},
+            </if>
+
+            <if test="question != null">
+                #{question},
+            </if>
+
+            <if test="answer != null">
+                #{answer},
+            </if>
+
+        </trim>
+
+    </insert>
+
+    <!--根据主键修改用户信息-->
+
+    <update id="updateByPrimaryKey">
+
+        update mall_user
+
+        <set>
+
+
+            <if test="userCode != null and userCode!=''">
+
+                userCode=#{userCode},
+
+            </if>
+
+            <if test="userName != null and userName !=''">
+
+                userName = #{userName},
+
+            </if>
+
+            <if test="nickName != null and nickName != ''">
+
+                nickName = #{nickName},
+
+            </if>
+
+            <if test="password != null and password !=''">
+
+                password=#{password},
+
+            </if>
+
+            <if test="headPic != null and headPic !=''">
+
+                head_Pic=#{head_Pic},
+
+            </if>
+
+            <if test="birthday != null and birthday !=null">
+
+                birthday=#{birthday},
+
+            </if>
+
+            <if test="age != null and age !=null">
+
+                age=#{age},
+
+            </if>
+
+            <if test="address != null and address !=''">
+
+                address=#{address},
+
+            </if>
+
+            <if test="phone != null and phone !=''">
+
+                phone=#{phone},
+
+            </if>
+
+            <if test="gender != null and gender !=''">
+
+                gender=#{gender},
+
+            </if>
+
+            <if test="qq != null and qq !=''">
+
+                qq=#{qq},
+
+            </if>
+
+            <if test="email != null and email !=''">
+
+                email=#{email},
+
+            </if>
+
+            <if test="paymentPassword != null and paymentPassword !=''">
+
+                paymentPassword=#{paymentPassword},
+
+            </if>
+
+            <if test="orderId != null and orderId !=''">
+
+                orderId=#{orderId},
+
+            </if>
+
+            <if test="creationgDate != null and creationgDate !=''">
+
+                creationgDate=#{creationgDate},
+
+            </if>
+
+            <if test="modifyDate != null and modifyDate !=''">
+
+                modifyDate=#{modifyDate},
+
+            </if>
+
+            <if test="question != null and question!=''">
+
+                question=#{question},
+
+            </if>
+
+            <if test="answer != null and answer !=''">
+
+                answer=#{answer},
+
+            </if>
+
+        </set>
+
+        where userId = #{userId}
+
+    </update>
+
+    <!--删除用户信息-->
+    <delete id="deleteByPrimaryKey">
+        delete from mall_user
+
+         where  userId = #{userId}
+    </delete>
+</mapper>

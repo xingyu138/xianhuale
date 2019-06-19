@@ -1,0 +1,273 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="cn.springbootxianhualemaster.dao.ProductMapper">
+	<resultMap type="Product" id="productList">
+		<result property="cName" column="name" />
+		<result property="coName" column="color_name" />
+		<result property="fName" column="flower_name" />
+		<result property="paName" column="packing_name" />
+		<result property="puName" column="purpose_name" />
+	</resultMap>
+<!-- 查看所有商品 -->
+<select id="getProduct" resultMap="productList" parameterType="product">
+SELECT p.*,re.name,
+		pu.purpose_name,
+		co.color_name,
+		f.flower_name,
+		pa.packing_name
+
+FROM
+		mall_product p
+		LEFT JOIN
+		reference_category re
+		ON p.category_id =
+		re.id
+		LEFT JOIN
+		reference_purpose pu
+		ON p.purpose_id = pu.id
+		LEFT JOIN
+		reference_flowers f
+		ON p.flowers_id = f.id
+		LEFT JOIN reference_packing
+		pa
+		ON p.packing_id = pa.id
+		LEFT JOIN reference_color co
+		ON p.color_id =
+		co.id
+		<where>
+			<if test="productName != null and productName != ''">
+				AND p.productName LIKE "%"#{productName}"%"
+			</if>
+			<if test="category_id != null and category_id != 0">
+				AND p.category_id = #{category_id}
+			</if>
+			<if test="purpose_id != null and purpose_id != 0">
+				AND p.purpose_id = #{purpose_id}
+			</if>
+			<if test="flowers_id != null and flowers_id != 0">
+				AND p.flowers_id = #{flowers_id}
+			</if>
+			<if test="packing_id != null and packing_id != 0">
+				AND p.packing_id = #{packing_id}
+			</if>
+			<if test="color_id != null and color_id != 0">
+				AND p.color_id = #{color_id}
+			</if>
+			<if test="amount != null and amount != 0">
+				AND p.amount = #{amount}
+			</if>
+			<if test="price1 != null and price2 != null">
+				AND p.price BETWEEN #{price1} AND  #{price2}
+			</if>
+		</where>
+		ORDER BY p.creationDate DESC</select>
+	<!--根据条件查询 -->
+	<select id="getProductList" resultMap="productList"
+		parameterType="product">
+		SELECT
+		p.id,
+		p.price,
+		p.sold,
+		p.provider_id,
+		p.status,
+		p.productPic,
+		p.category_id,
+		p.creationDate,
+		p.productName,
+		p.amount,
+		p.stock,
+		re.name,
+		pu.purpose_name,
+		co.color_name,
+		f.flower_name,
+		pa.packing_name
+
+		
+		FROM
+		mall_product p
+		LEFT JOIN
+		reference_category re
+		ON p.category_id =
+		re.id
+		LEFT JOIN
+		reference_purpose pu
+		ON p.purpose_id = pu.id
+		LEFT JOIN
+		reference_flowers f
+		ON p.flowers_id = f.id
+		LEFT JOIN reference_packing
+		pa
+		ON p.packing_id = pa.id
+		LEFT JOIN reference_color co
+		ON p.color_id =
+		co.id
+		<where>
+			<if test="productName != null and productName != ''">
+				AND p.productName LIKE "%"#{productName}"%"
+			</if>
+			<if test="category_id != null and category_id != 0">
+				AND p.category_id = #{category_id}
+			</if>
+			<if test="purpose_id != null and purpose_id != 0">
+				AND p.purpose_id = #{purpose_id}
+			</if>
+			<if test="flowers_id != null and flowers_id != 0">
+				AND p.flowers_id = #{flowers_id}
+			</if>
+			<if test="packing_id != null and packing_id != 0">
+				AND p.packing_id = #{packing_id}
+			</if>
+			<if test="color_id != null and color_id != 0">
+				AND p.color_id = #{color_id}
+			</if>
+			<if test="amount != null and amount != 0">
+				AND p.amount = #{amount}
+			</if>
+			<if test="price1 != null and price2 != null">
+				AND p.price BETWEEN #{price1} AND  #{price2}
+			</if>
+		</where>
+		ORDER BY p.creationDate DESC
+		LIMIT #{start},#{pageSize}
+	</select>
+	<!--查看总数 -->
+	<select id="getProductListCount" resultType="Integer">
+		SELECT COUNT(p.id)
+		FROM mall_product p
+		<where>
+			<if test="productName != null and productName != ''">
+				AND p.productName LIKE "%"#{productName}"%"
+			</if>
+			<if test="category_id != null and category_id != 0">
+				AND p.category_id = #{category_id}
+			</if>
+			<if test="purpose_id != null and purpose_id != 0">
+				AND p.purpose_id = #{purpose_id}
+			</if>
+			<if test="flowers_id != null and flowers_id != 0">
+				AND p.flowers_id = #{flowers_id}
+			</if>
+			<if test="packing_id != null and packing_id != 0">
+				AND p.packing_id = #{packing_id}
+			</if>
+			<if test="color_id != null and color_id != 0">
+				AND p.color_id = #{color_id}
+			</if>
+			<if test="amount != null and amount != 0">
+				AND p.amount = #{amount}
+			</if>
+			<if test="price1 != null and price2 != null">
+				AND p.price BETWEEN #{price1} AND  #{price2}
+			</if>
+		</where>
+	</select>
+
+
+	<!-- 根据id查看鲜花具体信息 -->
+	<select id="info"  resultMap="productList" parameterType="Product">
+				SELECT
+		p.*,
+		re.name,
+		pu.purpose_name,
+		co.color_name,
+		f.flower_name,
+		pa.packing_name
+		FROM
+		mall_product p,reference_category re,
+		reference_purpose pu,reference_flowers f,
+		reference_packing pa,reference_color co
+		where  p.category_id =re.id and p.purpose_id = pu.id and 
+		p.flowers_id = f.id and p.packing_id = pa.id and 
+		p.color_id =co.id and p.id=#{id}
+		
+		<!-- LEFT JOIN
+		reference_category re
+		ON p.category_id =
+		re.id
+		LEFT JOIN
+		reference_purpose pu
+		ON p.purpose_id = pu.id
+		LEFT JOIN
+		reference_flowers f
+		ON p.flowers_id = f.id
+		LEFT JOIN reference_packing
+		pa
+		ON p.packing_id = pa.id
+		LEFT JOIN reference_color co
+		ON p.color_id =
+		co.id -->
+		
+	</select>
+
+	<!-- 根据id 添加信息 -->
+	<!-- <insert id="add" parameterType="Product"> insert into mall_product 
+		(category_id,purpose_id,flowers_id,color_id,packing_id) values(#{category_id},#{purpose_id},#{flowers_id}, 
+		#{color_id},#{packing_id}); </insert> -->
+
+
+
+	<insert id="add" parameterType="Product">
+		insert into mall_product
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="category_id !=null and category_id !=''">category_id,</if>
+			<if test="purpose_id !=null and purpose_id !=''">purpose_id,</if>
+			<if test="flowers_id !=null and flowers_id !=''">flowers_id,</if>
+			<if test="price !=null and price !=''">price,</if>
+			<if test="color_id !=null and color_id !=''">color_id,</if>
+			<if test="packing_id !=null and packing_id !=''">packing_id,</if>
+			<if test="amount !=null and amount !=''">amount,</if>
+			<if test="productName !=null and productName !=''">productName,</if>
+			<if test="productPic !=null and productPic !=''">productPic,</if>
+			<if test="sold !=null and sold !=''">sold,</if>
+			<if test="status !=null and status !=''">status,</if>
+			<if test="creationDate !=null and creationDate !=''">creationDate,</if>
+		</trim>
+		values
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="category_id !=null and category_id !=''">#{category_id},</if>
+			<if test="purpose_id !=null and purpose_id !=''">#{purpose_id},</if>
+			<if test="flowers_id !=null and flowers_id !=''">#{flowers_id},</if>
+			<if test="price !=null and price !=''">#{price},</if>
+			<if test="color_id !=null and color_id !=''">#{color_id},</if>
+			<if test="packing_id !=null and packing_id !=''">#{packing_id},</if>
+			<if test="amount !=null and amount !=''">#{amount},</if>
+			<if test="productName !=null and productName !=''">#{productName},</if>
+			<if test="productPic !=null and productPic !=''">#{productPic},</if>
+			<if test="sold !=null and sold !=''">#{sold},</if>
+			<if test="status !=null and status !=''">#{status},</if>
+			<if test="creationDate !=null and creationDate !=''"> NOW(),</if>
+		</trim>
+	</insert>
+
+
+
+	<!-- 根据id 修改信息 -->
+	<update id="update">
+		UPDATE mall_product
+		<trim prefix="set" suffix="where id=#{id}" prefixOverrides=",">
+			<if test="category_id!=null and category_id!=''">,category_id =#{category_id}</if>
+			<if test="purpose_id!=null and  purpose_id!=''">,purpose_id =#{purpose_id}</if>
+			<if test="flowers_id!=null and  flowers_id!=''">,flowers_id =#{flowers_id}</if>
+			<if test="price!=null and price !=''">,price =#{price}</if>
+			<if test="color_id!=null and  color_id!=''">,color_id =#{color_id}</if>
+			<if test="packing_id!=null and packing_id !=''">,packing_id =#{packing_id}</if>
+			<if test="amount!=null and amount !=''">,amount =#{amount}</if>
+			<if test="productName!=null and productName !=''">,productName =#{productName}</if>
+			<if test="productPic!=null and  productPic!=''">,productPic =#{productPic}</if>
+			<if test="sold!=null and  sold!=''">,sold =#{sold}</if>
+			<if test="status!=null and  status!=''">,status =#{status}</if>
+			<if test="creationDate!=null and creationDate!=''"> ,NOW() </if>
+			
+		</trim>
+	</update>
+
+	<!-- 根据id 删除信息 -->
+	<delete id="delete" parameterType="Integer">
+		delete from
+		mall_product
+		where
+		id =#{id}
+	</delete>
+
+</mapper>

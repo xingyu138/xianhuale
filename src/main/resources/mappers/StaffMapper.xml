@@ -1,0 +1,397 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.StaffMapper">
+    <resultMap id="BaseResultMap" type="Staff">
+        <constructor>
+            <arg column="id" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="staffCode" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="staffName" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="staffPassword" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="gender" jdbcType="INTEGER" javaType="java.lang.Integer"/>
+            <arg column="birthday" jdbcType="DATE" javaType="java.util.Date"/>
+            <arg column="phone" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="address" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="staffRole" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="createdBy" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="creationDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="modifyBy" jdbcType="BIGINT" javaType="java.lang.Long"/>
+            <arg column="modifyDate" jdbcType="TIMESTAMP" javaType="java.util.Date"/>
+            <arg column="idPicPath" jdbcType="VARCHAR" javaType="java.lang.String"/>
+            <arg column="workPicPath" jdbcType="VARCHAR" javaType="java.lang.String"/>
+        </constructor>
+    </resultMap>
+    <insert id="insert" parameterType="Staff">
+    insert into staff (id, staffCode, staffName,
+      staffPassword, gender, birthday,
+      phone, address, staffRole,
+      createdBy, creationDate, modifyBy,
+      modifyDate, idPicPath, workPicPath
+      )
+    values (#{id,jdbcType=BIGINT}, #{staffcode,jdbcType=VARCHAR}, #{staffname,jdbcType=VARCHAR},
+      #{staffpassword,jdbcType=VARCHAR}, #{gender,jdbcType=INTEGER}, #{birthday,jdbcType=DATE},
+      #{phone,jdbcType=VARCHAR}, #{address,jdbcType=VARCHAR}, #{staffrole,jdbcType=BIGINT},
+      #{createdby,jdbcType=BIGINT}, #{creationdate,jdbcType=TIMESTAMP}, #{modifyby,jdbcType=BIGINT},
+      #{modifydate,jdbcType=TIMESTAMP}, #{idpicpath,jdbcType=VARCHAR}, #{workpicpath,jdbcType=VARCHAR}
+      )
+  </insert>
+    <!--员工登录-->
+    <select id="doLogin" parameterType="String" resultType="Staff">
+    SELECT * FROM staff WHERE staffCode=#{staffCode}
+
+  </select>
+
+
+
+    <insert id="insertSelective" parameterType="Staff">
+        insert into staff
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="staffcode != null">
+                staffCode,
+            </if>
+            <if test="staffname != null">
+                staffName,
+            </if>
+            <if test="staffpassword != null">
+                staffPassword,
+            </if>
+            <if test="gender != null">
+                gender,
+            </if>
+            <if test="birthday != null">
+                birthday,
+            </if>
+            <if test="phone != null">
+                phone,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="staffrole != null">
+                staffRole,
+            </if>
+            <if test="createdby != null">
+                createdBy,
+            </if>
+            <if test="creationdate != null">
+                creationDate,
+            </if>
+            <if test="modifyby != null">
+                modifyBy,
+            </if>
+            <if test="modifydate != null">
+                modifyDate,
+            </if>
+            <if test="idpicpath != null">
+                idPicPath,
+            </if>
+            <if test="workpicpath != null">
+                workPicPath,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="staffcode != null">
+                #{staffcode,jdbcType=VARCHAR},
+            </if>
+            <if test="staffname != null">
+                #{staffname,jdbcType=VARCHAR},
+            </if>
+            <if test="staffpassword != null">
+                #{staffpassword,jdbcType=VARCHAR},
+            </if>
+            <if test="gender != null">
+                #{gender,jdbcType=INTEGER},
+            </if>
+            <if test="birthday != null">
+                #{birthday,jdbcType=DATE},
+            </if>
+            <if test="phone != null">
+                #{phone,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="staffrole != null">
+                #{staffrole,jdbcType=BIGINT},
+            </if>
+            <if test="createdby != null">
+                #{createdby,jdbcType=BIGINT},
+            </if>
+            <if test="creationdate != null">
+                #{creationdate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="modifyby != null">
+                #{modifyby,jdbcType=BIGINT},
+            </if>
+            <if test="modifydate != null">
+                #{modifydate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="idpicpath != null">
+                #{idpicpath,jdbcType=VARCHAR},
+            </if>
+            <if test="workpicpath != null">
+                #{workpicpath,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <select id="selectStaffNum" resultType="int">
+       SELECT COUNT(id) FROM staff
+        <where>
+
+            <if test="staffCode !=null and staffCode !=''">
+                staffCode =#{staffCode}
+            </if>
+
+            <if test="staffName !=null and staffName != ''">
+                staffName ="%"#{staffName}"%"
+            </if>
+
+        </where>
+  </select>
+
+
+    <!--更具条件查询员工信息-->
+    <select id="getStaffByRequire" resultType="Staff">
+
+        SELECT s.id,s.staffCode,s.staffName,s.staffPassword,s.gender,s.birthday,s.phone,s.address,r.roleName,
+
+        s.createdBy,s.creationDate,s.modifyBy,s.modifyDate,s.idPicPath,s.workPicPath FROM staff AS s LEFT JOIN
+        staff_role AS r ON s.staffRole =r.id
+
+        <where>
+
+            <if test="id !=null">
+
+                s.id = #{id}
+            </if>
+
+            <if test="staffCode !=null and staffCode !=''">
+
+                s.staffCode = #{staffCode}
+            </if>
+
+            <if test="staffName !=null and staffName !='' ">
+
+                and s.staffName like "%"#{staffName}"%"
+            </if>
+
+        </where>
+
+        limit #{start},#{pageSize}
+
+    </select>
+
+
+
+    <insert id="addStaff">
+      insert into staff()
+
+    </insert>
+
+    <!--对应插入的字段名字-->
+    <sql id="key">
+
+        <trim suffixOverrides=",">
+
+            <if test="staffCode !=null and staffCode !=''">
+
+                staffCode,
+
+            </if>
+
+            <if test="staffName !=null and staffName !=''">
+
+                staffName,
+            </if>
+
+            <if test="staffPassword !=null and staffPassword !=''">
+
+                staffPassword,
+            </if>
+
+            <if test="gender !=null">
+
+                gender,
+            </if>
+
+            <if test="birthday !=null and birthday!=''">
+
+                birthday,
+            </if>
+
+            <if test="phone !=null and phone !=''">
+
+                phone,
+            </if>
+
+            <if test="address !=null and address !=''">
+
+                address,
+            </if>
+
+            <if test="staffRole !=null and address !=''">
+
+                staffRole,
+
+            </if>
+
+            <if test="createdBy !=null and createdBy !=''">
+
+                createdBy,
+            </if>
+
+            <if test="creationDate !=null and creationDate !=''">
+
+                creationDate,
+            </if>
+
+        </trim>
+
+    </sql>
+
+    <!--对应插入的字段值-->
+    <sql id="values">
+
+        <trim suffixOverrides=",">
+
+            <if test="staffCode !=null and staffCode !=''">
+
+                #{staffCode},
+
+            </if>
+
+            <if test="staffName !=null and staffName !=''">
+
+                #{staffName},
+            </if>
+
+            <if test="staffPassword !=null and staffPassword !=''">
+
+                #{staffPassword},
+            </if>
+
+            <if test="gender !=null">
+
+                #{gender},
+            </if>
+
+            <if test="birthday !=null and birthday!=''">
+
+                #{birthday},
+            </if>
+
+            <if test="phone !=null and phone !=''">
+
+                #{phone},
+            </if>
+
+            <if test="address !=null and address !=''">
+
+                #{address},
+            </if>
+
+            <if test="staffRole !=null and address !=''">
+
+                #{staffRole},
+
+            </if>
+
+            <if test="createdBy !=null and createdBy !=''">
+
+                #{createdBy},
+            </if>
+
+            <if test="creationDate !=null and creationDate !=''">
+
+                #{creationDate},
+            </if>
+
+        </trim>
+    </sql>
+
+    <!--插入员工-->
+    <insert id="insertIntoStaff">
+
+        insert into staff (<include refid="key"/>)
+
+        values (<include refid="values"/>)
+    </insert>
+
+    <!--根据id修改员工信息-->
+    <update id="updateStaffById">
+
+        update staff
+
+        <set>
+            <if test="staffCode !=null and staffCode !=''">
+
+                staffCode = #{staffCode},
+
+            </if>
+
+            <if test="staffName !=null and staffName !=''">
+
+                staffName = #{staffName},
+            </if>
+
+            <if test="staffPassword !=null and staffPassword !=''">
+
+                staffPassword = #{staffPassword},
+            </if>
+
+            <if test="gender !=null">
+
+                gender = #{gender},
+            </if>
+
+            <if test="birthday !=null and birthday!=''">
+
+                birthday = #{birthday},
+            </if>
+
+            <if test="phone !=null and phone !=''">
+
+                phone = #{phone},
+            </if>
+
+            <if test="address !=null and address !=''">
+
+                address = #{address},
+            </if>
+
+            <if test="staffRole !=null and address !=''">
+
+                staffRole = #{staffRole},
+
+            </if>
+
+            <if test="modifyBy !=null and modifyBy !=''">
+
+                modifyBy = #{modifyBy},
+            </if>
+
+            <if test="modifyDate !=null and modifyDate !=''">
+
+                modifyDate = #{modifyDate},
+            </if>
+
+        </set>
+
+        where id=#{id}
+
+    </update>
+
+    <!--更具id删除用户-->
+
+    <delete id="delectStaffById">
+
+        delete from staff where id = #{id}
+
+    </delete>
+
+</mapper>

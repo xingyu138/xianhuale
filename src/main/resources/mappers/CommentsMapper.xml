@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.springbootxianhualemaster.dao.CommentsMapper" >
+  <resultMap id="BaseResultMap" type="cn.springbootxianhualemaster.pojo.Comments" >
+    <constructor >
+      <idArg column="id" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="userId" jdbcType="INTEGER" javaType="java.lang.Integer" />
+      <arg column="commentsContent" jdbcType="VARCHAR" javaType="java.lang.String" />
+      <arg column="commentsDate" jdbcType="DATE" javaType="java.util.Date" />
+      <arg column="productName" jdbcType="VARCHAR" javaType="java.lang.String" />
+    </constructor>
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, userId, commentsContent, commentsDate, productName
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from mall_comments
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from mall_comments
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="Comments" >
+    insert into mall_comments (id, userId, commentsContent, 
+      commentsDate, productName)
+    values (#{id,jdbcType=INTEGER}, #{userid,jdbcType=INTEGER}, #{commentscontent,jdbcType=VARCHAR}, 
+      #{commentsdate,jdbcType=DATE}, #{productname,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="Comments" >
+    insert into mall_comments
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userid != null" >
+        userId,
+      </if>
+      <if test="commentscontent != null" >
+        commentsContent,
+      </if>
+      <if test="commentsdate != null" >
+        commentsDate,
+      </if>
+      <if test="productname != null" >
+        productName,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="userid != null" >
+        #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="commentscontent != null" >
+        #{commentscontent,jdbcType=VARCHAR},
+      </if>
+      <if test="commentsdate != null" >
+        #{commentsdate,jdbcType=DATE},
+      </if>
+      <if test="productname != null" >
+        #{productname,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="Comments" >
+    update mall_comments
+    <set >
+      <if test="userid != null" >
+        userId = #{userid,jdbcType=INTEGER},
+      </if>
+      <if test="commentscontent != null" >
+        commentsContent = #{commentscontent,jdbcType=VARCHAR},
+      </if>
+      <if test="commentsdate != null" >
+        commentsDate = #{commentsdate,jdbcType=DATE},
+      </if>
+      <if test="productname != null" >
+        productName = #{productname,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="Comments" >
+    update mall_comments
+    set userId = #{userid,jdbcType=INTEGER},
+      commentsContent = #{commentscontent,jdbcType=VARCHAR},
+      commentsDate = #{commentsdate,jdbcType=DATE},
+      productName = #{productname,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
